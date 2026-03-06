@@ -1,0 +1,10 @@
+{
+  "hero.title": "Welcome to i18n-pro",
+  "hero.subtitle": "A lightweight, AI-friendly translation system for any web project. Switch languages instantly, without reloading.",
+  "nav.home": "Home",
+  "nav.about": "About",
+  "nav.contact": "Contact",
+  "section.features": "Features",
+  "section.docs": "Documentation",
+  "footer.made_with": "Built with i18n-pro"
+}

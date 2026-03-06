@@ -1,0 +1,10 @@
+{
+    "hero.title": "Bienvenue sur i18n-pro",
+    "hero.subtitle": "Un système de traduction léger et compatible avec l'IA, pour n'importe quel projet web. Changez de langue instantanément, sans rechargement.",
+    "nav.home": "Accueil",
+    "nav.about": "À propos",
+    "nav.contact": "Contact",
+    "section.features": "Fonctionnalités",
+    "section.docs": "Documentation",
+    "footer.made_with": "Construit avec i18n-pro"
+}

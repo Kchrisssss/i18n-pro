@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>i18n-pro Admin | Dashboard</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --accent: #38bdf8;
+      --error: #f43f5e;
+      --success: #22c55e;
+      --mono: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+    
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+    
+    h1 {
+      margin: 0;
+      background: linear-gradient(to right, var(--accent), #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+    }
+    
+    .controls {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    
+    .button {
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    
+    .button:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    
+    .button.secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    
+    .grid {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    
+    th, td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    th {
+      background: rgba(15, 23, 42, 0.5);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #94a3b8;
+    }
+    
+    .key-cell {
+      font-family: var(--mono);
+      font-size: 0.875rem;
+      color: var(--accent);
+    }
+    
+    input {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+    
+    input.missing {
+      border-color: var(--error);
+      background: rgba(244, 63, 94, 0.05);
+    }
+    
+    .status-badge {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 1rem;
+      background: var(--border);
+    }
+    
+    .success { color: var(--success); }
+    .error { color: var(--error); }
+    
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>i18n-pro Admin</h1>
+      <div class="controls">
+        <select id="langSelector" class="button secondary">
+          <option value="en">English (Master)</option>
+          <option value="fr">French</option>
+          <option value="de">German</option>
+        </select>
+        <button id="saveBtn" class="button">Save Changes</button>
+        <button id="downloadBtn" class="button secondary">Download JSON</button>
+      </div>
+    </header>
+    
+    <div class="grid">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 30%">Key</th>
+            <th style="width: 35%" id="masterLangHeader">English (Primary)</th>
+            <th style="width: 35%" id="targetLangHeader">French (Target)</th>
+          </tr>
+        </thead>
+        <tbody id="translationTable">
+          <!-- Rows dynamic -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="loading" class="loading-overlay">
+    <div class="status-badge">Processing...</div>
+  </div>
+
+  <script type="module">
+    // Mock implementations for local preview / standalone usage
+    let masterData = {};
+    let targetData = {};
+    let targetLang = 'fr';
+    
+    async function loadResources() {
+      // In a real app, this would fetch from /locales
+      try {
+        const enRes = await fetch('/locales/en.json');
+        masterData = await enRes.json();
+        
+        const targetRes = await fetch(`/locales/${targetLang}.json`);
+        targetData = await targetRes.json();
+      } catch (e) {
+        console.warn('Locales not found, using sample data');
+        masterData = { 'hero.title': 'Welcome', 'hero.subtitle': 'Join us' };
+        targetData = { 'hero.title': 'Bienvenue' };
+      }
+      renderTable();
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('translationTable');
+      tbody.innerHTML = '';
+      
+      Object.keys(masterData).forEach(key => {
+        const row = document.createElement('tr');
+        const val = targetData[key] || '';
+        const isMissing = !val;
+        
+        row.innerHTML = `
+          <td class="key-cell">${key}</td>
+          <td>${masterData[key]}</td>
+          <td>
+            <input 
+              type="text" 
+              class="${isMissing ? 'missing' : ''}" 
+              value="${val}" 
+              data-key="${key}"
+            >
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    document.getElementById('langSelector').addEventListener('change', (e) => {
+      targetLang = e.target.value;
+      loadResources();
+    });
+
+    document.getElementById('saveBtn').addEventListener('click', async () => {
+      const inputs = document.querySelectorAll('input[data-key]');
+      const newData = {};
+      inputs.forEach(input => {
+        newData[input.dataset.key] = input.value;
+      });
+      
+      console.log('Saving to server...', newData);
+      // Logic for saving back to Disk or Supabase goes here
+      alert('Changes staged. Check console for output (In-Memory preview only).');
+    });
+
+    document.getElementById('downloadBtn').addEventListener('click', () => {
+       const inputs = document.querySelectorAll('input[data-key]');
+       const newData = {};
+       inputs.forEach(input => {
+         newData[input.dataset.key] = input.value;
+       });
+       const blob = new Blob([JSON.stringify(newData, null, 2)], { type: 'application/json' });
+       const url = URL.createObjectURL(blob);
+       const a = document.createElement('a');
+       a.href = url;
+       a.download = `${targetLang}.json`;
+       a.click();
+    });
+
+    loadResources();
+  </script>
+</body>
+</html>
