@@ -1,272 +1,1018 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>i18n-pro Admin | Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
   <style>
     :root {
       --bg: #0f172a;
       --card-bg: #1e293b;
+      --section-hd: #162032;
       --border: #334155;
       --text: #f8fafc;
+      --muted: #94a3b8;
       --accent: #38bdf8;
+      --purple: #818cf8;
       --error: #f43f5e;
+      --warn: #f59e0b;
       --success: #22c55e;
+      --danger: #ef4444;
       --mono: 'JetBrains Mono', 'Fira Code', monospace;
     }
-    
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       background: var(--bg);
       color: var(--text);
       font-family: 'Inter', sans-serif;
-      margin: 0;
-      padding: 0;
+      min-height: 100vh;
     }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-    
+
+    /* ── Header ─────────────────────────────────────── */
     header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 2rem;
+    }
+
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 2rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 1rem;
+      gap: 1rem;
+      flex-wrap: wrap;
     }
-    
+
     h1 {
-      margin: 0;
-      background: linear-gradient(to right, var(--accent), #818cf8);
+      background: linear-gradient(to right, var(--accent), var(--purple));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       font-weight: 800;
+      font-size: 1.4rem;
       letter-spacing: -0.025em;
+      white-space: nowrap;
     }
-    
-    .controls {
+
+    .header-controls {
       display: flex;
-      gap: 1rem;
+      gap: 0.6rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    /* ── Stats bar ─────────────────────────────────── */
+    .stats-bar {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0.75rem 2rem 0;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
       align-items: center;
     }
-    
-    .button {
-      background: var(--accent);
-      color: var(--bg);
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
+
+    .stat-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.85rem;
+      border-radius: 2rem;
+      font-size: 0.78rem;
       font-weight: 600;
-      transition: all 0.2s;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.18s;
+      user-select: none;
     }
-    
-    .button:hover {
-      opacity: 0.9;
+
+    .stat-chip.all {
+      background: rgba(148, 163, 184, 0.15);
+      color: var(--muted);
+      border-color: transparent;
+    }
+
+    .stat-chip.translated {
+      background: rgba(34, 197, 94, 0.12);
+      color: var(--success);
+    }
+
+    .stat-chip.missing {
+      background: rgba(244, 63, 94, 0.12);
+      color: var(--error);
+    }
+
+    .stat-chip.empty {
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--warn);
+    }
+
+    .stat-chip.active {
+      border-color: currentColor !important;
+    }
+
+    .stat-chip:hover {
+      opacity: 0.85;
+    }
+
+    .stat-divider {
+      color: var(--border);
+      font-size: 1.2rem;
+    }
+
+    /* ── Buttons ───────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: 0.5rem;
+      border: none;
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      opacity: 0.85;
       transform: translateY(-1px);
     }
-    
-    .button.secondary {
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .btn-outline {
       background: transparent;
       color: var(--text);
       border: 1px solid var(--border);
     }
-    
-    .grid {
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.25);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: none;
+      padding: 0.3rem 0.5rem;
+      font-size: 0.78rem;
+    }
+
+    .btn-ghost:hover {
+      color: var(--danger);
+      transform: none;
+    }
+
+    .btn-ghost.field-del {
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .btn-icon {
+      padding: 0.4rem 0.6rem;
+    }
+
+    .btn-sm {
+      font-size: 0.72rem;
+      padding: 0.3rem 0.6rem;
+    }
+
+    /* ── Upload area ───────────────────────────────── */
+    .upload-zone {
+      max-width: 1280px;
+      margin: 1rem auto 0;
+      padding: 0 2rem;
+    }
+
+    .upload-drop {
+      border: 2px dashed var(--border);
+      border-radius: 0.75rem;
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      background: rgba(56, 189, 248, 0.02);
+    }
+
+    .upload-drop:hover,
+    .upload-drop.drag-over {
+      border-color: var(--accent);
+      background: rgba(56, 189, 248, 0.06);
+    }
+
+    .upload-drop input[type="file"] {
+      display: none;
+    }
+
+    .upload-icon {
+      font-size: 1.6rem;
+      flex-shrink: 0;
+    }
+
+    .upload-text {
+      flex: 1;
+    }
+
+    .upload-text strong {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .upload-text span {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .upload-filename {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--success);
+      padding: 0.25rem 0.6rem;
+      background: rgba(34, 197, 94, 0.1);
+      border-radius: 0.4rem;
+    }
+
+    /* ── Main content ──────────────────────────────── */
+    .container {
+      max-width: 1280px;
+      margin: 1.25rem auto 3rem;
+      padding: 0 2rem;
+    }
+
+    /* ── Section card ──────────────────────────────── */
+    .section-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 1rem;
       overflow: hidden;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 1.25rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
     }
-    
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-    }
-    
-    th, td {
-      padding: 1rem;
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.7rem 1rem 0.7rem 1.25rem;
+      background: var(--section-hd);
       border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      gap: 0.5rem;
     }
-    
-    th {
-      background: rgba(15, 23, 42, 0.5);
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: #94a3b8;
+
+    .section-header:hover {
+      background: rgba(22, 32, 50, 0.8);
     }
-    
-    .key-cell {
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
       font-family: var(--mono);
-      font-size: 0.875rem;
+      font-size: 0.85rem;
+      font-weight: 600;
       color: var(--accent);
     }
-    
-    input {
-      background: #0f172a;
+
+    .section-arrow {
+      transition: transform 0.2s;
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    .section-arrow.open {
+      transform: rotate(90deg);
+    }
+
+    .section-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .section-body {
+      overflow: hidden;
+    }
+
+    .section-body.collapsed {
+      display: none;
+    }
+
+    /* ── Translation rows ──────────────────────────── */
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    .row:last-child {
+      border-bottom: none;
+    }
+
+    .row:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .row:hover .btn-ghost.field-del {
+      opacity: 1;
+    }
+
+    .cell {
+      padding: 0.7rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-width: 0;
+    }
+
+    .cell.key-cell {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--accent);
+      border-right: 1px solid var(--border);
+      word-break: break-all;
+    }
+
+    .cell.master-cell {
+      font-size: 0.85rem;
+      color: var(--muted);
+      border-right: 1px solid var(--border);
+      font-style: italic;
+    }
+
+    .cell.input-cell {
+      padding: 0.5rem 0.75rem;
+    }
+
+    .cell.action-cell {
+      justify-content: center;
+      padding: 0.5rem 0.5rem;
+    }
+
+    .tbl-input {
+      background: rgba(15, 23, 42, 0.8);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 0.5rem;
-      border-radius: 0.25rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 0.35rem;
       width: 100%;
-      box-sizing: border-box;
+      font-family: inherit;
+      font-size: 0.85rem;
+      transition: border-color 0.18s, box-shadow 0.18s;
     }
-    
-    input:focus {
+
+    .tbl-input:focus {
       outline: none;
       border-color: var(--accent);
-      box-shadow: 0 0 0 1px var(--accent);
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.15);
     }
-    
-    input.missing {
-      border-color: var(--error);
+
+    .tbl-input.missing {
+      border-color: rgba(244, 63, 94, 0.6);
       background: rgba(244, 63, 94, 0.05);
     }
-    
-    .status-badge {
-      font-size: 0.75rem;
-      padding: 0.2rem 0.5rem;
-      border-radius: 1rem;
-      background: var(--border);
+
+    /* Table header row */
+    .tbl-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      background: rgba(15, 23, 42, 0.6);
+      border-bottom: 1px solid var(--border);
+      padding: 0.4rem 1rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
     }
-    
-    .success { color: var(--success); }
-    .error { color: var(--error); }
-    
-    .loading-overlay {
+
+    .tbl-header>span:nth-child(2) {
+      padding-left: 1rem;
+    }
+
+    /* ── Modal ─────────────────────────────────────── */
+    .modal-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(15, 23, 42, 0.8);
-      display: none;
-      justify-content: center;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(6px);
+      display: flex;
       align-items: center;
-      z-index: 1000;
+      justify-content: center;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 1.25rem;
+      padding: 2rem;
+      max-width: 440px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      transform: translateY(12px) scale(0.97);
+      transition: transform 0.2s;
+    }
+
+    .modal-overlay.show .modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .modal-confirm-input {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 0.5rem;
+      padding: 0.6rem 0.85rem;
+      width: 100%;
+      font-family: var(--mono);
+      font-size: 0.88rem;
+      margin-bottom: 1.25rem;
+      transition: border-color 0.18s;
+    }
+
+    .modal-confirm-input:focus {
+      outline: none;
+      border-color: var(--danger);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+    }
+
+    /* ── Toast ─────────────────────────────────────── */
+    #toastWrap {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .toast {
+      padding: 0.65rem 1.1rem;
+      border-radius: 0.65rem;
+      font-size: 0.83rem;
+      font-weight: 500;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      animation: toastIn 0.25s ease;
+    }
+
+    .toast.success {
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .toast.error {
+      border-color: var(--error);
+      color: var(--error);
+    }
+
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* ── Empty state ───────────────────────────────── */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* ── Scrollbar ─────────────────────────────────── */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
     }
   </style>
 </head>
+
 <body>
-  <div class="container">
-    <header>
-      <h1>i18n-pro Admin</h1>
-      <div class="controls">
-        <select id="langSelector" class="button secondary">
-          <option value="en">English (Master)</option>
-          <option value="fr">French</option>
-          <option value="de">German</option>
+
+  <!-- ─── Header ──────────────────────────────────────────── -->
+  <header>
+    <div class="header-inner">
+      <h1>⟨i18n-pro⟩ Admin</h1>
+
+      <div class="header-controls">
+        <!-- Language selector -->
+        <select id="langSelector" class="btn btn-outline" style="cursor:pointer; font-family:inherit;">
+          <option value="fr">🇫🇷 French</option>
+          <option value="de">🇩🇪 German</option>
+          <option value="es">🇪🇸 Spanish</option>
         </select>
-        <button id="saveBtn" class="button">Save Changes</button>
-        <button id="downloadBtn" class="button secondary">Download JSON</button>
+
+        <button id="downloadBtn" class="btn btn-outline">
+          ⬇ Download JSON
+        </button>
+
+        <button id="deleteAllBtn" class="btn btn-danger">
+          🗑 Delete All Translations
+        </button>
       </div>
-    </header>
-    
-    <div class="grid">
-      <table>
-        <thead>
-          <tr>
-            <th style="width: 30%">Key</th>
-            <th style="width: 35%" id="masterLangHeader">English (Primary)</th>
-            <th style="width: 35%" id="targetLangHeader">French (Target)</th>
-          </tr>
-        </thead>
-        <tbody id="translationTable">
-          <!-- Rows dynamic -->
-        </tbody>
-      </table>
+    </div>
+  </header>
+
+  <!-- ─── Stats / Filter bar ──────────────────────────────── -->
+  <div class="stats-bar">
+    <span class="stat-chip all active" data-filter="all">All <strong id="cntAll">0</strong></span>
+    <span class="stat-divider">·</span>
+    <span class="stat-chip translated" data-filter="translated">✓ Translated <strong
+        id="cntTranslated">0</strong></span>
+    <span class="stat-chip missing" data-filter="missing">✕ Missing <strong id="cntMissing">0</strong></span>
+  </div>
+
+  <!-- ─── JSON Upload zone ─────────────────────────────────── -->
+  <div class="upload-zone">
+    <label class="upload-drop" id="uploadDrop">
+      <input type="file" id="uploadInput" accept=".json">
+      <div class="upload-icon">📂</div>
+      <div class="upload-text">
+        <strong>Upload translated JSON</strong>
+        <span>Drag & drop or click — merges into current target language</span>
+      </div>
+      <span id="uploadFilename" class="upload-filename" style="display:none"></span>
+    </label>
+  </div>
+
+  <!-- ─── Main grid ─────────────────────────────────────────── -->
+  <div class="container" id="mainContainer">
+    <div class="empty-state" id="emptyState">Loading translations…</div>
+  </div>
+
+  <!-- ─── Delete-All Modal ─────────────────────────────────── -->
+  <div class="modal-overlay" id="deleteAllModal">
+    <div class="modal">
+      <h2>⚠️ Delete All Translations</h2>
+      <p>
+        This will clear <em>every</em> translated value for the current language
+        from this editor session. Downloaded JSON will be empty.<br><br>
+        Type <strong style="color:var(--danger);font-family:var(--mono)">DELETE ALL</strong> to confirm.
+      </p>
+      <input type="text" class="modal-confirm-input" id="deleteAllConfirm" placeholder="Type DELETE ALL">
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="deleteAllCancel">Cancel</button>
+        <button class="btn btn-danger" id="deleteAllConfirmBtn" disabled>Delete All</button>
+      </div>
     </div>
   </div>
 
-  <div id="loading" class="loading-overlay">
-    <div class="status-badge">Processing...</div>
+  <!-- ─── Delete-Section Modal ─────────────────────────────── -->
+  <div class="modal-overlay" id="deleteSectionModal">
+    <div class="modal">
+      <h2>Delete Section</h2>
+      <p id="deleteSectionMsg">Clear all translated values for this section?</p>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="deleteSectionCancel">Cancel</button>
+        <button class="btn btn-danger" id="deleteSectionConfirmBtn">Clear Section</button>
+      </div>
+    </div>
   </div>
 
+  <!-- ─── Toast container ──────────────────────────────────── -->
+  <div id="toastWrap"></div>
+
   <script type="module">
-    // Mock implementations for local preview / standalone usage
-    let masterData = {};
-    let targetData = {};
-    let targetLang = 'fr';
-    
+    // ── State ────────────────────────────────────────────────
+    let masterData = {};   // en.json  – source of truth (keys + English values)
+    let targetData = {};   // e.g. fr.json – current translations being edited
+    let targetLang = document.getElementById('langSelector').value;
+    let activeFilter = 'all';
+    let pendingSectionDelete = null;
+
+    // ── Boot ─────────────────────────────────────────────────
     async function loadResources() {
-      // In a real app, this would fetch from /locales
       try {
-        const enRes = await fetch('/locales/en.json');
+        const [enRes, tRes] = await Promise.all([
+          fetch('/locales/en.json'),
+          fetch(`/locales/${targetLang}.json`)
+        ]);
         masterData = await enRes.json();
-        
-        const targetRes = await fetch(`/locales/${targetLang}.json`);
-        targetData = await targetRes.json();
-      } catch (e) {
-        console.warn('Locales not found, using sample data');
-        masterData = { 'hero.title': 'Welcome', 'hero.subtitle': 'Join us' };
-        targetData = { 'hero.title': 'Bienvenue' };
+        targetData = await tRes.json().catch(() => ({}));
+      } catch {
+        masterData = {
+          'hero.title': 'Welcome to i18n-pro',
+          'hero.subtitle': 'A lightweight translation system.',
+          'nav.home': 'Home',
+          'nav.about': 'About',
+          'nav.contact': 'Contact',
+          'section.features': 'Features',
+          'footer.made_with': 'Built with i18n-pro'
+        };
+        targetData = { 'hero.title': 'Sample translation' };
       }
-      renderTable();
+      render();
     }
 
-    function renderTable() {
-      const tbody = document.getElementById('translationTable');
-      tbody.innerHTML = '';
-      
+    // ── Group keys by first segment ──────────────────────────
+    function groupKeys() {
+      const groups = {};
       Object.keys(masterData).forEach(key => {
-        const row = document.createElement('tr');
-        const val = targetData[key] || '';
-        const isMissing = !val;
-        
-        row.innerHTML = `
-          <td class="key-cell">${key}</td>
-          <td>${masterData[key]}</td>
-          <td>
-            <input 
-              type="text" 
-              class="${isMissing ? 'missing' : ''}" 
-              value="${val}" 
-              data-key="${key}"
+        const seg = key.split('.')[0];
+        if (!groups[seg]) groups[seg] = [];
+        groups[seg].push(key);
+      });
+      return groups;
+    }
+
+    // ── Stats ─────────────────────────────────────────────────
+    function computeStats() {
+      const keys = Object.keys(masterData);
+      const translated = keys.filter(k => (targetData[k] || '').trim() !== '');
+      const missing = keys.filter(k => (targetData[k] || '').trim() === '');
+      return { total: keys.length, translated: translated.length, missing: missing.length };
+    }
+
+    function updateStats() {
+      const s = computeStats();
+      document.getElementById('cntAll').textContent = s.total;
+      document.getElementById('cntTranslated').textContent = s.translated;
+      document.getElementById('cntMissing').textContent = s.missing;
+    }
+
+    // ── Render ────────────────────────────────────────────────
+    function render() {
+      updateStats();
+      const container = document.getElementById('mainContainer');
+      container.innerHTML = '';
+
+      const groups = groupKeys();
+
+      Object.entries(groups).forEach(([section, keys]) => {
+        // Apply filter
+        const visibleKeys = keys.filter(key => {
+          const val = (targetData[key] || '').trim();
+          if (activeFilter === 'translated') return val !== '';
+          if (activeFilter === 'missing') return val === '';
+          return true;
+        });
+
+        if (visibleKeys.length === 0) return;
+
+        const card = document.createElement('div');
+        card.className = 'section-card';
+        card.dataset.section = section;
+
+        const sectionTranslated = keys.filter(k => (targetData[k] || '').trim() !== '').length;
+        const sectionTotal = keys.length;
+
+        card.innerHTML = `
+        <div class="section-header" data-section="${section}">
+          <div class="section-title">
+            <span class="section-arrow open">▶</span>
+            <span>${section}</span>
+          </div>
+          <div class="section-meta">
+            <span style="color:var(--success)">${sectionTranslated}</span>/<span>${sectionTotal}</span> translated
+            <button class="btn btn-danger btn-sm delete-section-btn" data-section="${section}" title="Clear section translations">
+              🗑 Delete Section
+            </button>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="tbl-header">
+            <span>English (primary)</span>
+            <span>${langLabel(targetLang)} (target)</span>
+            <span></span>
+          </div>
+          <div class="rows-list"></div>
+        </div>
+      `;
+
+        const rowsList = card.querySelector('.rows-list');
+
+        visibleKeys.forEach(key => {
+          const val = targetData[key] || '';
+          const isMissing = val.trim() === '';
+
+          const row = document.createElement('div');
+          row.className = 'row';
+          row.dataset.key = key;
+
+          row.innerHTML = `
+          <div class="cell key-cell" title="${key}">
+            <span>${key}</span>
+          </div>
+          <div class="cell master-cell">${escHtml(masterData[key] || '')}</div>
+          <div class="cell input-cell">
+            <input
+              type="text"
+              class="tbl-input ${isMissing ? 'missing' : ''}"
+              value="${escAttr(val)}"
+              data-key="${escAttr(key)}"
+              placeholder="Add translation…"
             >
-          </td>
+          </div>
+          <div class="cell action-cell">
+            <button class="btn btn-ghost field-del delete-field-btn" data-key="${escAttr(key)}" title="Clear this field">✕</button>
+          </div>
         `;
-        tbody.appendChild(row);
+
+          rowsList.appendChild(row);
+        });
+
+        container.appendChild(card);
+      });
+
+      if (container.innerHTML === '') {
+        container.innerHTML = `<div class="empty-state">No keys match the current filter.</div>`;
+      }
+
+      attachRowListeners();
+    }
+
+    // ── Row-level events ──────────────────────────────────────
+    function attachRowListeners() {
+      // Inputs
+      document.querySelectorAll('.tbl-input').forEach(inp => {
+        inp.addEventListener('input', () => {
+          const key = inp.dataset.key;
+          targetData[key] = inp.value;
+          inp.classList.toggle('missing', inp.value.trim() === '');
+          updateStats();
+          refreshSectionMeta(inp.closest('.section-card'));
+        });
+      });
+
+      // Field delete buttons
+      document.querySelectorAll('.delete-field-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const key = btn.dataset.key;
+          targetData[key] = '';
+          const inp = document.querySelector(`.tbl-input[data-key="${key}"]`);
+          if (inp) { inp.value = ''; inp.classList.add('missing'); }
+          updateStats();
+          refreshSectionMeta(btn.closest('.section-card'));
+          toast('Field cleared', 'success');
+        });
+      });
+
+      // Section delete buttons (stop propagation so it doesn't toggle collapse)
+      document.querySelectorAll('.delete-section-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          pendingSectionDelete = btn.dataset.section;
+          document.getElementById('deleteSectionMsg').textContent =
+            `Clear all translated values for section "${pendingSectionDelete}"?`;
+          document.getElementById('deleteSectionModal').classList.add('show');
+        });
+      });
+
+      // Section collapse/expand
+      document.querySelectorAll('.section-header').forEach(hd => {
+        hd.addEventListener('click', () => {
+          const body = hd.nextElementSibling;
+          const arrow = hd.querySelector('.section-arrow');
+          const collapsed = body.classList.toggle('collapsed');
+          arrow.classList.toggle('open', !collapsed);
+        });
       });
     }
 
-    document.getElementById('langSelector').addEventListener('change', (e) => {
+    function refreshSectionMeta(card) {
+      if (!card) return;
+      const section = card.dataset.section;
+      const keys = groupKeys()[section] || [];
+      const done = keys.filter(k => (targetData[k] || '').trim() !== '').length;
+      const metaSpan = card.querySelector('.section-meta span');
+      if (metaSpan) metaSpan.textContent = done;
+    }
+
+    // ── Filter chips ──────────────────────────────────────────
+    document.querySelectorAll('.stat-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        activeFilter = chip.dataset.filter;
+        document.querySelectorAll('.stat-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        render();
+      });
+    });
+
+    // ── Language selector ─────────────────────────────────────
+    document.getElementById('langSelector').addEventListener('change', e => {
       targetLang = e.target.value;
+      targetData = {};
       loadResources();
     });
 
-    document.getElementById('saveBtn').addEventListener('click', async () => {
-      const inputs = document.querySelectorAll('input[data-key]');
-      const newData = {};
-      inputs.forEach(input => {
-        newData[input.dataset.key] = input.value;
-      });
-      
-      console.log('Saving to server...', newData);
-      // Logic for saving back to Disk or Supabase goes here
-      alert('Changes staged. Check console for output (In-Memory preview only).');
-    });
-
+    // ── Download ──────────────────────────────────────────────
     document.getElementById('downloadBtn').addEventListener('click', () => {
-       const inputs = document.querySelectorAll('input[data-key]');
-       const newData = {};
-       inputs.forEach(input => {
-         newData[input.dataset.key] = input.value;
-       });
-       const blob = new Blob([JSON.stringify(newData, null, 2)], { type: 'application/json' });
-       const url = URL.createObjectURL(blob);
-       const a = document.createElement('a');
-       a.href = url;
-       a.download = `${targetLang}.json`;
-       a.click();
+      const out = {};
+      Object.keys(masterData).forEach(k => { out[k] = targetData[k] || ''; });
+      download(`${targetLang}.json`, JSON.stringify(out, null, 2));
+      toast(`${targetLang}.json downloaded ✓`, 'success');
     });
 
+    // ── JSON Upload ───────────────────────────────────────────
+    const uploadDrop = document.getElementById('uploadDrop');
+    const uploadInput = document.getElementById('uploadInput');
+
+    uploadDrop.addEventListener('dragover', e => { e.preventDefault(); uploadDrop.classList.add('drag-over'); });
+    uploadDrop.addEventListener('dragleave', () => uploadDrop.classList.remove('drag-over'));
+    uploadDrop.addEventListener('drop', e => {
+      e.preventDefault();
+      uploadDrop.classList.remove('drag-over');
+      handleUpload(e.dataTransfer.files[0]);
+    });
+
+    uploadInput.addEventListener('change', () => handleUpload(uploadInput.files[0]));
+
+    function handleUpload(file) {
+      if (!file || !file.name.endsWith('.json')) {
+        toast('Please upload a .json file', 'error'); return;
+      }
+      const reader = new FileReader();
+      reader.onload = ev => {
+        try {
+          const parsed = JSON.parse(ev.target.result);
+          let merged = 0;
+          Object.entries(parsed).forEach(([k, v]) => {
+            if (k in masterData) { targetData[k] = v; merged++; }
+          });
+          const filenameEl = document.getElementById('uploadFilename');
+          filenameEl.textContent = file.name;
+          filenameEl.style.display = '';
+          render();
+          toast(`Merged ${merged} keys from ${file.name}`, 'success');
+        } catch {
+          toast('Invalid JSON file', 'error');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // ── Delete All Modal ──────────────────────────────────────
+    const deleteAllModal = document.getElementById('deleteAllModal');
+    const deleteAllInput = document.getElementById('deleteAllConfirm');
+    const deleteAllBtn = document.getElementById('deleteAllConfirmBtn');
+
+    document.getElementById('deleteAllBtn').addEventListener('click', () => {
+      deleteAllInput.value = '';
+      deleteAllBtn.disabled = true;
+      deleteAllModal.classList.add('show');
+      setTimeout(() => deleteAllInput.focus(), 220);
+    });
+
+    deleteAllInput.addEventListener('input', () => {
+      deleteAllBtn.disabled = deleteAllInput.value !== 'DELETE ALL';
+    });
+
+    document.getElementById('deleteAllCancel').addEventListener('click', () => {
+      deleteAllModal.classList.remove('show');
+    });
+
+    deleteAllBtn.addEventListener('click', () => {
+      Object.keys(masterData).forEach(k => { targetData[k] = ''; });
+      deleteAllModal.classList.remove('show');
+      render();
+      toast('All translations cleared', 'success');
+    });
+
+    deleteAllModal.addEventListener('click', e => {
+      if (e.target === deleteAllModal) deleteAllModal.classList.remove('show');
+    });
+
+    // ── Delete Section Modal ──────────────────────────────────
+    const deleteSectionModal = document.getElementById('deleteSectionModal');
+
+    document.getElementById('deleteSectionCancel').addEventListener('click', () => {
+      deleteSectionModal.classList.remove('show');
+      pendingSectionDelete = null;
+    });
+
+    document.getElementById('deleteSectionConfirmBtn').addEventListener('click', () => {
+      if (!pendingSectionDelete) return;
+      const keys = groupKeys()[pendingSectionDelete] || [];
+      keys.forEach(k => { targetData[k] = ''; });
+      deleteSectionModal.classList.remove('show');
+      render();
+      toast(`Section "${pendingSectionDelete}" cleared`, 'success');
+      pendingSectionDelete = null;
+    });
+
+    deleteSectionModal.addEventListener('click', e => {
+      if (e.target === deleteSectionModal) {
+        deleteSectionModal.classList.remove('show');
+        pendingSectionDelete = null;
+      }
+    });
+
+    // ── Helpers ───────────────────────────────────────────────
+    function langLabel(lang) {
+      const map = { fr: 'French', de: 'German', es: 'Spanish', it: 'Italian', pt: 'Portuguese', nl: 'Dutch', ja: 'Japanese', zh: 'Chinese' };
+      return map[lang] || lang.toUpperCase();
+    }
+
+    function escHtml(s) {
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function escAttr(s) {
+      return String(s).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function download(filename, text) {
+      const a = Object.assign(document.createElement('a'), {
+        href: URL.createObjectURL(new Blob([text], { type: 'application/json' })),
+        download: filename
+      });
+      a.click();
+    }
+
+    function toast(msg, type = 'success') {
+      const el = document.createElement('div');
+      el.className = `toast ${type}`;
+      el.textContent = msg;
+      document.getElementById('toastWrap').appendChild(el);
+      setTimeout(() => el.remove(), 3200);
+    }
+
+    // ── Init ──────────────────────────────────────────────────
     loadResources();
   </script>
 </body>
+
 </html>
