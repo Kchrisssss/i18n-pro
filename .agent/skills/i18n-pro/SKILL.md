@@ -124,11 +124,17 @@ await initI18n({
 ## 📜 Admin Panel Rules
 
 The admin panel at `/admin/index.html`:
-- Fetches all keys from the master locale (`en.json` or Supabase)
-- Shows them side-by-side with the target language in editable fields
-- Highlights **missing** translations in red
-- Has a **Download JSON** button to export the edited locale file
-- Has a **Save Changes** button (wires to Supabase in dynamic mode; in static mode, use Download JSON)
+- Fetches all keys from the master locale (`en.json`) and shows them side-by-side with editable target fields.
+- Highlights **missing** translations in red.
+- **💾 Save** — uses the File System Access API (`window.showDirectoryPicker`) to write `[lang].json` directly into the chosen `locales/` directory. No download-and-replace needed.
+- **⬇ Download dropdown** — fallback download menu with two options:
+  - *Target language JSON* — exports the current translated file.
+  - *English master JSON* — exports `en.json` as-is.
+- **⇄ Copy EN to empty** — fills every blank target field with its English source text for a quick translator baseline.
+- **Unsaved-changes tracking** — a pulsing amber dot appears next to the logo when there are unsaved edits. The browser `beforeunload` event and an in-page nav-guard modal prevent accidental data loss when switching languages or closing the tab.
+- **Progress bar** — shows translated percentage alongside the filter chips.
+- **Section filter** — a `<select>` in the stats bar lets translators focus on one key-prefix group at a time. Friendly labels are configured via the `SECTION_LABELS` object at the top of the `<script>` block.
+- **`SECTION_LABELS` config** — map key prefixes to display names (e.g. `nav → 'Navigation'`). Edit this object to match your project's key structure.
 
 ---
 

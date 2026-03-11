@@ -61,6 +61,12 @@
       flex-wrap: wrap;
     }
 
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
     h1 {
       background: linear-gradient(to right, var(--accent), var(--purple));
       -webkit-background-clip: text;
@@ -70,6 +76,26 @@
       font-size: 1.4rem;
       letter-spacing: -0.025em;
       white-space: nowrap;
+    }
+
+    /* Unsaved-changes pulse dot */
+    #unsavedDot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--warn);
+      flex-shrink: 0;
+      display: none;
+      animation: pulse-dot 1.4s ease-in-out infinite;
+    }
+
+    #unsavedDot.visible {
+      display: block;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.45; transform: scale(0.7); }
     }
 
     .header-controls {
@@ -120,11 +146,6 @@
       color: var(--error);
     }
 
-    .stat-chip.empty {
-      background: rgba(245, 158, 11, 0.12);
-      color: var(--warn);
-    }
-
     .stat-chip.active {
       border-color: currentColor !important;
     }
@@ -136,6 +157,66 @@
     .stat-divider {
       color: var(--border);
       font-size: 1.2rem;
+    }
+
+    /* Progress bar */
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-left: 0.25rem;
+    }
+
+    .progress-bar-track {
+      width: 120px;
+      height: 6px;
+      background: rgba(148, 163, 184, 0.18);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(to right, var(--accent), var(--purple));
+      transition: width 0.35s ease;
+    }
+
+    .progress-pct {
+      font-size: 0.73rem;
+      font-weight: 700;
+      color: var(--muted);
+      min-width: 34px;
+      text-align: right;
+    }
+
+    /* Section filter */
+    .section-filter-wrap {
+      margin-left: 0.5rem;
+    }
+
+    .section-filter-wrap select {
+      background: rgba(30, 41, 59, 0.9);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.28rem 0.75rem;
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.18s;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394a3b8'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.6rem center;
+      padding-right: 1.8rem;
+    }
+
+    .section-filter-wrap select:focus {
+      outline: none;
+      border-color: var(--accent);
     }
 
     /* ── Buttons ───────────────────────────────────── */
@@ -168,6 +249,16 @@
       color: var(--bg);
     }
 
+    .btn-save {
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      color: var(--bg);
+      font-weight: 700;
+    }
+
+    .btn-save:hover {
+      opacity: 0.9;
+    }
+
     .btn-outline {
       background: transparent;
       color: var(--text);
@@ -182,6 +273,16 @@
 
     .btn-danger:hover {
       background: rgba(239, 68, 68, 0.25);
+    }
+
+    .btn-purple {
+      background: rgba(129, 140, 248, 0.15);
+      color: var(--purple);
+      border: 1px solid rgba(129, 140, 248, 0.3);
+    }
+
+    .btn-purple:hover {
+      background: rgba(129, 140, 248, 0.25);
     }
 
     .btn-ghost {
@@ -209,6 +310,70 @@
     .btn-sm {
       font-size: 0.72rem;
       padding: 0.3rem 0.6rem;
+    }
+
+    /* ── Download dropdown ─────────────────────────── */
+    .dropdown-wrap {
+      position: relative;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.65rem;
+      overflow: hidden;
+      min-width: 200px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.4);
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-6px);
+      transition: opacity 0.18s, transform 0.18s;
+    }
+
+    .dropdown-menu.open {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+      color: var(--text);
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-family: inherit;
+    }
+
+    .dropdown-item:hover {
+      background: rgba(56, 189, 248, 0.08);
+    }
+
+    .dropdown-item .item-label {
+      flex: 1;
+    }
+
+    .dropdown-item .item-hint {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 0.25rem 0;
     }
 
     /* ── Upload area ───────────────────────────────── */
@@ -430,7 +595,7 @@
       padding-left: 1rem;
     }
 
-    /* ── Modal ─────────────────────────────────────── */
+    /* ── Modals ─────────────────────────────────────── */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -525,26 +690,13 @@
       animation: toastIn 0.25s ease;
     }
 
-    .toast.success {
-      border-color: var(--success);
-      color: var(--success);
-    }
-
-    .toast.error {
-      border-color: var(--error);
-      color: var(--error);
-    }
+    .toast.success { border-color: var(--success); color: var(--success); }
+    .toast.error   { border-color: var(--error);   color: var(--error); }
+    .toast.warn    { border-color: var(--warn);     color: var(--warn); }
 
     @keyframes toastIn {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-
-      to {
-        opacity: 1;
-        transform: none;
-      }
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: none; }
     }
 
     /* ── Empty state ───────────────────────────────── */
@@ -556,18 +708,9 @@
     }
 
     /* ── Scrollbar ─────────────────────────────────── */
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 3px;
-    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
   </style>
 </head>
 
@@ -576,7 +719,10 @@
   <!-- ─── Header ──────────────────────────────────────────── -->
   <header>
     <div class="header-inner">
-      <h1>⟨i18n-pro⟩ Admin</h1>
+      <div class="logo-wrap">
+        <h1>⟨i18n-pro⟩ Admin</h1>
+        <span id="unsavedDot" title="Unsaved changes"></span>
+      </div>
 
       <div class="header-controls">
         <!-- Language selector -->
@@ -584,14 +730,43 @@
           <option value="fr">🇫🇷 French</option>
           <option value="de">🇩🇪 German</option>
           <option value="es">🇪🇸 Spanish</option>
+          <option value="it">🇮🇹 Italian</option>
+          <option value="pt">🇵🇹 Portuguese</option>
+          <option value="nl">🇳🇱 Dutch</option>
+          <option value="ja">🇯🇵 Japanese</option>
+          <option value="zh">🇨🇳 Chinese</option>
         </select>
 
-        <button id="downloadBtn" class="btn btn-outline">
-          ⬇ Download JSON
+        <!-- Copy EN to empty -->
+        <button id="copyEnBtn" class="btn btn-purple" title="Fill all empty target fields with the English source text">
+          ⇄ Copy EN to empty
         </button>
 
+        <!-- Save to file system -->
+        <button id="saveBtn" class="btn btn-save">
+          💾 Save
+        </button>
+
+        <!-- Download dropdown -->
+        <div class="dropdown-wrap" id="downloadWrap">
+          <button class="btn btn-outline" id="downloadToggle">⬇ Download ▾</button>
+          <div class="dropdown-menu" id="downloadMenu">
+            <button class="dropdown-item" id="downloadTargetBtn">
+              <span>📄</span>
+              <span class="item-label">Target language JSON</span>
+              <span class="item-hint" id="downloadTargetHint">fr.json</span>
+            </button>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item" id="downloadEnBtn">
+              <span>🌐</span>
+              <span class="item-label">English master JSON</span>
+              <span class="item-hint">en.json</span>
+            </button>
+          </div>
+        </div>
+
         <button id="deleteAllBtn" class="btn btn-danger">
-          🗑 Delete All Translations
+          🗑 Delete All
         </button>
       </div>
     </div>
@@ -601,9 +776,24 @@
   <div class="stats-bar">
     <span class="stat-chip all active" data-filter="all">All <strong id="cntAll">0</strong></span>
     <span class="stat-divider">·</span>
-    <span class="stat-chip translated" data-filter="translated">✓ Translated <strong
-        id="cntTranslated">0</strong></span>
-    <span class="stat-chip missing" data-filter="missing">✕ Missing <strong id="cntMissing">0</strong></span>
+    <span class="stat-chip translated" data-filter="translated">✓ Translated <strong id="cntTranslated">0</strong></span>
+    <span class="stat-chip missing"    data-filter="missing">✕ Missing <strong id="cntMissing">0</strong></span>
+    <span class="stat-divider">·</span>
+
+    <!-- Progress bar -->
+    <div class="progress-wrap">
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <span class="progress-pct" id="progressPct">0%</span>
+    </div>
+
+    <!-- Section filter -->
+    <div class="section-filter-wrap">
+      <select id="sectionFilter">
+        <option value="all">All Sections</option>
+      </select>
+    </div>
   </div>
 
   <!-- ─── JSON Upload zone ─────────────────────────────────── -->
@@ -613,7 +803,7 @@
       <div class="upload-icon">📂</div>
       <div class="upload-text">
         <strong>Upload translated JSON</strong>
-        <span>Drag & drop or click — merges into current target language</span>
+        <span>Drag &amp; drop or click — merges into current target language</span>
       </div>
       <span id="uploadFilename" class="upload-filename" style="display:none"></span>
     </label>
@@ -622,6 +812,22 @@
   <!-- ─── Main grid ─────────────────────────────────────────── -->
   <div class="container" id="mainContainer">
     <div class="empty-state" id="emptyState">Loading translations…</div>
+  </div>
+
+  <!-- ─── Unsaved-changes nav-guard modal ─────────────────── -->
+  <div class="modal-overlay" id="navGuardModal">
+    <div class="modal">
+      <h2>⚠️ Unsaved Changes</h2>
+      <p>
+        You have unsaved changes. If you leave now, your work will be lost.<br><br>
+        <strong>Save</strong> first using the 💾 Save button (or ⬇ Download as fallback),
+        then navigate away.
+      </p>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="navGuardStay">Stay on page</button>
+        <button class="btn btn-danger"  id="navGuardLeave">Leave anyway</button>
+      </div>
+    </div>
   </div>
 
   <!-- ─── Delete-All Modal ─────────────────────────────────── -->
@@ -636,7 +842,7 @@
       <input type="text" class="modal-confirm-input" id="deleteAllConfirm" placeholder="Type DELETE ALL">
       <div class="modal-actions">
         <button class="btn btn-outline" id="deleteAllCancel">Cancel</button>
-        <button class="btn btn-danger" id="deleteAllConfirmBtn" disabled>Delete All</button>
+        <button class="btn btn-danger"  id="deleteAllConfirmBtn" disabled>Delete All</button>
       </div>
     </div>
   </div>
@@ -648,7 +854,7 @@
       <p id="deleteSectionMsg">Clear all translated values for this section?</p>
       <div class="modal-actions">
         <button class="btn btn-outline" id="deleteSectionCancel">Cancel</button>
-        <button class="btn btn-danger" id="deleteSectionConfirmBtn">Clear Section</button>
+        <button class="btn btn-danger"  id="deleteSectionConfirmBtn">Clear Section</button>
       </div>
     </div>
   </div>
@@ -657,15 +863,45 @@
   <div id="toastWrap"></div>
 
   <script type="module">
-    // ── State ────────────────────────────────────────────────
-    let masterData = {};   // en.json  – source of truth (keys + English values)
-    let targetData = {};   // e.g. fr.json – current translations being edited
-    let targetLang = document.getElementById('langSelector').value;
-    let activeFilter = 'all';
-    let pendingSectionDelete = null;
 
-    // ── Boot ─────────────────────────────────────────────────
+    // ── Section label config ──────────────────────────────────
+    // Customise these to map key prefixes to friendly display names.
+    const SECTION_LABELS = {
+      nav:     'Navigation',
+      hero:    'Hero / Banner',
+      section: 'Sections',
+      footer:  'Footer',
+      auth:    'Authentication',
+      errors:  'Errors',
+      cta:     'Call to Action',
+      modal:   'Modals',
+      form:    'Forms',
+    };
+
+    // ── State ─────────────────────────────────────────────────
+    let masterData  = {};
+    let targetData  = {};
+    let targetLang  = document.getElementById('langSelector').value;
+    let activeFilter        = 'all';
+    let activeSectionFilter = 'all';
+    let pendingSectionDelete = null;
+    let hasUnsavedChanges   = false;
+    let pendingNavAction    = null; // callback to run if user confirms leaving
+
+    // ── Unsaved changes helpers ───────────────────────────────
+    function markUnsaved() {
+      hasUnsavedChanges = true;
+      document.getElementById('unsavedDot').classList.add('visible');
+    }
+
+    function markSaved() {
+      hasUnsavedChanges = false;
+      document.getElementById('unsavedDot').classList.remove('visible');
+    }
+
+    // ── Boot ──────────────────────────────────────────────────
     async function loadResources() {
+      markSaved(); // fresh load = clean state
       try {
         const [enRes, tRes] = await Promise.all([
           fetch('/locales/en.json'),
@@ -675,20 +911,21 @@
         targetData = await tRes.json().catch(() => ({}));
       } catch {
         masterData = {
-          'hero.title': 'Welcome to i18n-pro',
-          'hero.subtitle': 'A lightweight translation system.',
-          'nav.home': 'Home',
-          'nav.about': 'About',
-          'nav.contact': 'Contact',
-          'section.features': 'Features',
-          'footer.made_with': 'Built with i18n-pro'
+          'hero.title':      'Welcome to i18n-pro',
+          'hero.subtitle':   'A lightweight translation system.',
+          'nav.home':        'Home',
+          'nav.about':       'About',
+          'nav.contact':     'Contact',
+          'section.features':'Features',
+          'footer.made_with':'Built with i18n-pro'
         };
         targetData = { 'hero.title': 'Sample translation' };
       }
+      populateSectionFilter();
       render();
     }
 
-    // ── Group keys by first segment ──────────────────────────
+    // ── Group keys by first segment ───────────────────────────
     function groupKeys() {
       const groups = {};
       Object.keys(masterData).forEach(key => {
@@ -699,19 +936,41 @@
       return groups;
     }
 
+    // ── Section label helper ──────────────────────────────────
+    function sectionLabel(prefix) {
+      return SECTION_LABELS[prefix] || prefix;
+    }
+
+    // ── Populate section filter dropdown ──────────────────────
+    function populateSectionFilter() {
+      const sel = document.getElementById('sectionFilter');
+      // Keep the "All Sections" option, remove the rest
+      while (sel.options.length > 1) sel.remove(1);
+      const groups = groupKeys();
+      Object.keys(groups).sort().forEach(prefix => {
+        const opt = document.createElement('option');
+        opt.value = prefix;
+        opt.textContent = sectionLabel(prefix);
+        sel.appendChild(opt);
+      });
+    }
+
     // ── Stats ─────────────────────────────────────────────────
     function computeStats() {
-      const keys = Object.keys(masterData);
+      const keys       = Object.keys(masterData);
       const translated = keys.filter(k => (targetData[k] || '').trim() !== '');
-      const missing = keys.filter(k => (targetData[k] || '').trim() === '');
+      const missing    = keys.filter(k => (targetData[k] || '').trim() === '');
       return { total: keys.length, translated: translated.length, missing: missing.length };
     }
 
     function updateStats() {
       const s = computeStats();
-      document.getElementById('cntAll').textContent = s.total;
+      document.getElementById('cntAll').textContent        = s.total;
       document.getElementById('cntTranslated').textContent = s.translated;
-      document.getElementById('cntMissing').textContent = s.missing;
+      document.getElementById('cntMissing').textContent    = s.missing;
+      const pct = s.total ? Math.round((s.translated / s.total) * 100) : 0;
+      document.getElementById('progressFill').style.width  = pct + '%';
+      document.getElementById('progressPct').textContent   = pct + '%';
     }
 
     // ── Render ────────────────────────────────────────────────
@@ -723,11 +982,14 @@
       const groups = groupKeys();
 
       Object.entries(groups).forEach(([section, keys]) => {
-        // Apply filter
+        // Section filter
+        if (activeSectionFilter !== 'all' && section !== activeSectionFilter) return;
+
+        // Status filter
         const visibleKeys = keys.filter(key => {
           const val = (targetData[key] || '').trim();
           if (activeFilter === 'translated') return val !== '';
-          if (activeFilter === 'missing') return val === '';
+          if (activeFilter === 'missing')    return val === '';
           return true;
         });
 
@@ -738,13 +1000,14 @@
         card.dataset.section = section;
 
         const sectionTranslated = keys.filter(k => (targetData[k] || '').trim() !== '').length;
-        const sectionTotal = keys.length;
+        const sectionTotal      = keys.length;
 
         card.innerHTML = `
         <div class="section-header" data-section="${section}">
           <div class="section-title">
             <span class="section-arrow open">▶</span>
-            <span>${section}</span>
+            <span>${escHtml(sectionLabel(section))}</span>
+            <span style="color:var(--muted);font-weight:400;font-family:var(--mono);font-size:0.72rem">(${escHtml(section)})</span>
           </div>
           <div class="section-meta">
             <span style="color:var(--success)">${sectionTranslated}</span>/<span>${sectionTotal}</span> translated
@@ -756,7 +1019,7 @@
         <div class="section-body">
           <div class="tbl-header">
             <span>English (primary)</span>
-            <span>${langLabel(targetLang)} (target)</span>
+            <span>${escHtml(langLabel(targetLang))} (target)</span>
             <span></span>
           </div>
           <div class="rows-list"></div>
@@ -766,7 +1029,7 @@
         const rowsList = card.querySelector('.rows-list');
 
         visibleKeys.forEach(key => {
-          const val = targetData[key] || '';
+          const val       = targetData[key] || '';
           const isMissing = val.trim() === '';
 
           const row = document.createElement('div');
@@ -774,8 +1037,8 @@
           row.dataset.key = key;
 
           row.innerHTML = `
-          <div class="cell key-cell" title="${key}">
-            <span>${key}</span>
+          <div class="cell key-cell" title="${escAttr(key)}">
+            <span>${escHtml(key)}</span>
           </div>
           <div class="cell master-cell">${escHtml(masterData[key] || '')}</div>
           <div class="cell input-cell">
@@ -813,6 +1076,7 @@
           const key = inp.dataset.key;
           targetData[key] = inp.value;
           inp.classList.toggle('missing', inp.value.trim() === '');
+          markUnsaved();
           updateStats();
           refreshSectionMeta(inp.closest('.section-card'));
         });
@@ -823,8 +1087,9 @@
         btn.addEventListener('click', () => {
           const key = btn.dataset.key;
           targetData[key] = '';
-          const inp = document.querySelector(`.tbl-input[data-key="${key}"]`);
+          const inp = document.querySelector(`.tbl-input[data-key="${CSS.escape(key)}"]`);
           if (inp) { inp.value = ''; inp.classList.add('missing'); }
+          markUnsaved();
           updateStats();
           refreshSectionMeta(btn.closest('.section-card'));
           toast('Field cleared', 'success');
@@ -845,7 +1110,7 @@
       // Section collapse/expand
       document.querySelectorAll('.section-header').forEach(hd => {
         hd.addEventListener('click', () => {
-          const body = hd.nextElementSibling;
+          const body  = hd.nextElementSibling;
           const arrow = hd.querySelector('.section-arrow');
           const collapsed = body.classList.toggle('collapsed');
           arrow.classList.toggle('open', !collapsed);
@@ -856,13 +1121,13 @@
     function refreshSectionMeta(card) {
       if (!card) return;
       const section = card.dataset.section;
-      const keys = groupKeys()[section] || [];
-      const done = keys.filter(k => (targetData[k] || '').trim() !== '').length;
+      const keys    = groupKeys()[section] || [];
+      const done    = keys.filter(k => (targetData[k] || '').trim() !== '').length;
       const metaSpan = card.querySelector('.section-meta span');
       if (metaSpan) metaSpan.textContent = done;
     }
 
-    // ── Filter chips ──────────────────────────────────────────
+    // ── Filter chips ───────────────────────────────────────────
     document.querySelectorAll('.stat-chip').forEach(chip => {
       chip.addEventListener('click', () => {
         activeFilter = chip.dataset.filter;
@@ -872,23 +1137,109 @@
       });
     });
 
-    // ── Language selector ─────────────────────────────────────
-    document.getElementById('langSelector').addEventListener('change', e => {
-      targetLang = e.target.value;
-      targetData = {};
-      loadResources();
+    // ── Section filter dropdown ────────────────────────────────
+    document.getElementById('sectionFilter').addEventListener('change', e => {
+      activeSectionFilter = e.target.value;
+      render();
     });
 
-    // ── Download ──────────────────────────────────────────────
-    document.getElementById('downloadBtn').addEventListener('click', () => {
+    // ── Language selector ─────────────────────────────────────
+    document.getElementById('langSelector').addEventListener('change', e => {
+      const doChange = () => {
+        targetLang = e.target.value;
+        targetData = {};
+        activeSectionFilter = 'all';
+        document.getElementById('sectionFilter').value = 'all';
+        document.getElementById('downloadTargetHint').textContent = `${targetLang}.json`;
+        loadResources();
+      };
+
+      if (hasUnsavedChanges) {
+        pendingNavAction = doChange;
+        document.getElementById('navGuardModal').classList.add('show');
+        // Reset the select back visually until confirmed
+        e.target.value = targetLang;
+      } else {
+        doChange();
+      }
+    });
+
+    // ── Copy EN to empty ──────────────────────────────────────
+    document.getElementById('copyEnBtn').addEventListener('click', () => {
+      let filled = 0;
+      document.querySelectorAll('.tbl-input').forEach(inp => {
+        const key = inp.dataset.key;
+        if (inp.value.trim() === '' && masterData[key]) {
+          inp.value = masterData[key];
+          targetData[key] = masterData[key];
+          inp.classList.remove('missing');
+          filled++;
+        }
+      });
+      if (filled > 0) {
+        markUnsaved();
+        updateStats();
+        document.querySelectorAll('.section-card').forEach(card => refreshSectionMeta(card));
+        toast(`Copied EN text into ${filled} empty field${filled !== 1 ? 's' : ''}`, 'success');
+      } else {
+        toast('No empty fields found', 'warn');
+      }
+    });
+
+    // ── Build output JSON ─────────────────────────────────────
+    function buildOutput() {
       const out = {};
       Object.keys(masterData).forEach(k => { out[k] = targetData[k] || ''; });
-      download(`${targetLang}.json`, JSON.stringify(out, null, 2));
+      return JSON.stringify(out, null, 2);
+    }
+
+    // ── Save (File System Access API) ─────────────────────────
+    document.getElementById('saveBtn').addEventListener('click', async () => {
+      if (!('showDirectoryPicker' in window)) {
+        toast('File System API not available — use Download instead', 'warn');
+        return;
+      }
+      try {
+        const dirHandle  = await window.showDirectoryPicker({ mode: 'readwrite' });
+        const fileHandle = await dirHandle.getFileHandle(`${targetLang}.json`, { create: true });
+        const writable   = await fileHandle.createWritable();
+        await writable.write(buildOutput());
+        await writable.close();
+        markSaved();
+        toast(`Saved ${targetLang}.json to selected folder ✓`, 'success');
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          toast('Save failed — ' + err.message, 'error');
+        }
+      }
+    });
+
+    // ── Download dropdown ─────────────────────────────────────
+    const downloadToggle = document.getElementById('downloadToggle');
+    const downloadMenu   = document.getElementById('downloadMenu');
+
+    downloadToggle.addEventListener('click', e => {
+      e.stopPropagation();
+      downloadMenu.classList.toggle('open');
+    });
+
+    document.addEventListener('click', () => downloadMenu.classList.remove('open'));
+
+    document.getElementById('downloadTargetBtn').addEventListener('click', () => {
+      downloadMenu.classList.remove('open');
+      download(`${targetLang}.json`, buildOutput());
+      markSaved();
       toast(`${targetLang}.json downloaded ✓`, 'success');
     });
 
+    document.getElementById('downloadEnBtn').addEventListener('click', () => {
+      downloadMenu.classList.remove('open');
+      download('en.json', JSON.stringify(masterData, null, 2));
+      toast('en.json downloaded ✓', 'success');
+    });
+
     // ── JSON Upload ───────────────────────────────────────────
-    const uploadDrop = document.getElementById('uploadDrop');
+    const uploadDrop  = document.getElementById('uploadDrop');
     const uploadInput = document.getElementById('uploadInput');
 
     uploadDrop.addEventListener('dragover', e => { e.preventDefault(); uploadDrop.classList.add('drag-over'); });
@@ -916,6 +1267,7 @@
           const filenameEl = document.getElementById('uploadFilename');
           filenameEl.textContent = file.name;
           filenameEl.style.display = '';
+          markUnsaved();
           render();
           toast(`Merged ${merged} keys from ${file.name}`, 'success');
         } catch {
@@ -925,14 +1277,45 @@
       reader.readAsText(file);
     }
 
+    // ── Nav-guard modal ───────────────────────────────────────
+    const navGuardModal = document.getElementById('navGuardModal');
+
+    document.getElementById('navGuardStay').addEventListener('click', () => {
+      navGuardModal.classList.remove('show');
+      pendingNavAction = null;
+    });
+
+    document.getElementById('navGuardLeave').addEventListener('click', () => {
+      navGuardModal.classList.remove('show');
+      const action = pendingNavAction;
+      pendingNavAction = null;
+      markSaved(); // suppress any further guards for this action
+      if (action) action();
+    });
+
+    navGuardModal.addEventListener('click', e => {
+      if (e.target === navGuardModal) {
+        navGuardModal.classList.remove('show');
+        pendingNavAction = null;
+      }
+    });
+
+    // Browser unload guard
+    window.addEventListener('beforeunload', e => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    });
+
     // ── Delete All Modal ──────────────────────────────────────
-    const deleteAllModal = document.getElementById('deleteAllModal');
-    const deleteAllInput = document.getElementById('deleteAllConfirm');
-    const deleteAllBtn = document.getElementById('deleteAllConfirmBtn');
+    const deleteAllModal  = document.getElementById('deleteAllModal');
+    const deleteAllInput  = document.getElementById('deleteAllConfirm');
+    const deleteAllBtn    = document.getElementById('deleteAllConfirmBtn');
 
     document.getElementById('deleteAllBtn').addEventListener('click', () => {
-      deleteAllInput.value = '';
-      deleteAllBtn.disabled = true;
+      deleteAllInput.value    = '';
+      deleteAllBtn.disabled   = true;
       deleteAllModal.classList.add('show');
       setTimeout(() => deleteAllInput.focus(), 220);
     });
@@ -948,6 +1331,7 @@
     deleteAllBtn.addEventListener('click', () => {
       Object.keys(masterData).forEach(k => { targetData[k] = ''; });
       deleteAllModal.classList.remove('show');
+      markUnsaved();
       render();
       toast('All translations cleared', 'success');
     });
@@ -969,6 +1353,7 @@
       const keys = groupKeys()[pendingSectionDelete] || [];
       keys.forEach(k => { targetData[k] = ''; });
       deleteSectionModal.classList.remove('show');
+      markUnsaved();
       render();
       toast(`Section "${pendingSectionDelete}" cleared`, 'success');
       pendingSectionDelete = null;
@@ -983,12 +1368,18 @@
 
     // ── Helpers ───────────────────────────────────────────────
     function langLabel(lang) {
-      const map = { fr: 'French', de: 'German', es: 'Spanish', it: 'Italian', pt: 'Portuguese', nl: 'Dutch', ja: 'Japanese', zh: 'Chinese' };
+      const map = {
+        fr: 'French', de: 'German', es: 'Spanish', it: 'Italian',
+        pt: 'Portuguese', nl: 'Dutch', ja: 'Japanese', zh: 'Chinese'
+      };
       return map[lang] || lang.toUpperCase();
     }
 
     function escHtml(s) {
-      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
     }
 
     function escAttr(s) {
@@ -997,7 +1388,7 @@
 
     function download(filename, text) {
       const a = Object.assign(document.createElement('a'), {
-        href: URL.createObjectURL(new Blob([text], { type: 'application/json' })),
+        href:     URL.createObjectURL(new Blob([text], { type: 'application/json' })),
         download: filename
       });
       a.click();
@@ -1005,13 +1396,14 @@
 
     function toast(msg, type = 'success') {
       const el = document.createElement('div');
-      el.className = `toast ${type}`;
+      el.className  = `toast ${type}`;
       el.textContent = msg;
       document.getElementById('toastWrap').appendChild(el);
       setTimeout(() => el.remove(), 3200);
     }
 
     // ── Init ──────────────────────────────────────────────────
+    document.getElementById('downloadTargetHint').textContent = `${targetLang}.json`;
     loadResources();
   </script>
 </body>
